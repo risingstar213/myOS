@@ -14,16 +14,11 @@ DASM := ndisasm
 BOOT := boot/boot.bin boot/loader.bin
 BOOTINC := -I boot/include/
 KERNEL := kernel/kernel.bin
-KERNELINC := -I include/
-OBJS := kernel/kernel.o kernel/start.o lib/kliba.o lib/string.o
+CINC := -I include/
+OBJS := kernel/global.o kernel/kernel.o kernel/start.o kernel/i8259.o kernel/protect.o lib/klib.o lib/kliba.o lib/string.o
 DASMOUTPUT	= kernel.bin.asm
 
 .PHONY : all everything clean boot kernel disasm
-
-all: clean everything 
-
-disasm :
-	$(DASM) $(DASMFLAGS) $(KERNEL) > $(DASMOUTPUT)
 
 everything : boot kernel
 	dd if=boot/boot.bin of=a.img bs=512 count=1 conv=notrunc
@@ -32,12 +27,18 @@ everything : boot kernel
 	sudo cp -fv kernel/kernel.bin /mnt/floppy
 	sudo umount /mnt/floppy
 
+disasm :
+	$(DASM) $(DASMFLAGS) $(KERNEL) > $(DASMOUTPUT)
+
+
+all: clean everything 
+
 clean :
 	rm $(OBJS) $(BOOT) $(KERNEL)
 
 boot: $(BOOT)
 
-kernel: kernel/kernel.o kernel/start.o lib/kliba.o lib/string.o
+kernel: $(OBJS)
 	$(LD) -m elf_i386 -Ttext 0x30400 -s -o kernel/kernel.bin $^
 
 boot/boot.bin : boot/boot.asm boot/include/load.inc boot/include/fat12hdr.inc
@@ -50,8 +51,22 @@ boot/loader.bin : boot/loader.asm boot/include/load.inc \
 kernel/kernel.o: kernel/kernel.asm
 	$(ASM) -f elf -o $@ $<
 
-kernel/start.o : kernel/start.c include/type.h include/const.h include/protect.h
-	$(CC) $(KERNELINC)  -m32 -c -fno-builtin -o $@ $<
+kernel/start.o : kernel/start.c include/type.h include/const.h include/protect.h \
+		include/proto.h include/string.h
+	$(CC) $(CINC)  -m32 -c -fno-builtin -o $@ $<
+
+kernel/i8259.o : kernel/i8259.c include/type.h include/const.h include/protect.h \
+			include/proto.h
+	$(CC) $(CINC)  -m32 -c -fno-builtin -o $@ $<
+
+kernel/global.o:  kernel/global.c include/global.h
+	$(CC) $(CINC)  -m32 -c -fno-builtin -o $@ $<
+
+kernel/protect.o : kernel/protect.c
+	$(CC) $(CINC) -fno-stack-protector -m32 -c -fno-builtin -o $@ $<
+
+lib/klib.o : lib/klib.c
+	$(CC) $(CINC) -fno-stack-protector -m32 -c -fno-builtin -o $@ $<
 
 lib/kliba.o : lib/kliba.asm
 	$(ASM) -f elf -o $@ $<
