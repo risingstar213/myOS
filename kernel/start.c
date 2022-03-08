@@ -7,6 +7,7 @@
 
 PUBLIC void cstart()
 {
+    disp_pos = 0;
     disp_str("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 		 "-----\"cstart\" begins-----\n");
     // 旧 GDT -> 新 GDT

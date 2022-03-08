@@ -35,3 +35,15 @@ PUBLIC void disp_int(int input)
     itoa(output, input);
     disp_str(output);
 }
+
+PUBLIC void delay(int time)
+{
+    int i, j, k;
+    for(i = 0; i < time; i++) {
+        for(j = 0; j < time; j++) {
+            for(k = 0; k < time; k++) {
+
+            }
+        }
+    }
+}

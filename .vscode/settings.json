@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "global.h": "c"
+        "global.h": "c",
+        "type.h": "c",
+        "const.h": "c"
     }
 }

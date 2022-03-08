@@ -1,6 +1,7 @@
 [SECTION .text]
 
 global memcpy
+global memset
 
 memcpy:
     push	ebp
@@ -36,3 +37,31 @@ memcpy:
 
 	ret			; 函数结束，返回
 ; memcpy 结束-------------------------------------------------------------
+
+memset:
+	push ebp
+	mov ebp, esp
+
+	push edi
+	push edx
+	push ecx
+
+	mov edi, [ebp + 8] ; array
+	mov edx, [ebp + 12] ; number
+	mov ecx, [ebp + 16] ; counter
+.1:
+	cmp ecx, 0
+	jz .2
+	mov byte[esi], dl
+	inc edi
+	dec	ecx	
+	jmp .1
+.2:
+	pop ecx
+	pop edx
+	pop edi
+
+	mov esp, ebp
+	pop ebp
+
+	ret

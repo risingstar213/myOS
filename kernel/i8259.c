@@ -36,3 +36,10 @@ PUBLIC void init_8259A()
     // SLAVE OCW1
     out_byte(INT_S_CTLMASK,	0xFF);
 }
+
+PUBLIC void spurious_irq(int irq)
+{
+    disp_str("spurious_irq: ");
+    disp_int(irq);
+    disp_str("\n");
+}

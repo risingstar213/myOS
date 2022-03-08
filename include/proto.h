@@ -9,4 +9,8 @@ PUBLIC void disp_color_str(char * info, int color);
 PUBLIC void disp_int(int input);
 PUBLIC void	init_8259A();
 
+PUBLIC void	delay(int time);
+
+void restart();
+
 #endif
