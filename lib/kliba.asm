@@ -7,6 +7,7 @@ global disp_color_str
 global out_byte
 global in_byte
 
+
 disp_str:
     push	ebp
 	mov	ebp, esp

@@ -1,6 +1,5 @@
 %include "sconst.inc"
 
-SELECTOR_KERNEL_CS equ 8
 
 extern cstart
 extern exception_handler
@@ -19,6 +18,9 @@ BITS 32 ; 对齐
 [SECTION .bss]
 StackSpace    resb  2 * 1024
 StackTop:
+
+[SECTION .data]
+message db "Test\n", 0
 
 [SECTION .text]
 
@@ -64,8 +66,11 @@ global hwint14
 global hwint15
 
 
+
 _start:
     mov esp, StackTop
+
+    mov	dword [disp_pos], 0
 
     sgdt [gdt_ptr]
     call cstart
@@ -75,7 +80,6 @@ _start:
 
     jmp SELECTOR_KERNEL_CS:csinit ; 使用初始化结构
 csinit:
-
     ; ud2
     ; jmp 0x40:0
 
@@ -84,7 +88,9 @@ csinit:
     ; sti
     xor	eax, eax
 	mov	ax, SELECTOR_TSS
+
 	ltr	ax
+
     jmp	kernel_main
     hlt
 
