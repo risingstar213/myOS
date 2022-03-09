@@ -35,3 +35,12 @@ SELECTOR_FLAT_C		equ		0x08	; LOADER 里面已经确定了的.
 SELECTOR_TSS		equ		0x20	; TSS
 SELECTOR_KERNEL_CS	equ		SELECTOR_FLAT_C
 
+
+; I/O 端口
+INT_M_CTL      equ 0x20
+INT_M_CTLMASK  equ 0x21
+INT_S_CTL      equ 0xA0
+INT_S_CTLMASK  equ 0xA1
+
+; EOI
+EOI equ 0x20

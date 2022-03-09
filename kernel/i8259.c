@@ -31,7 +31,7 @@ PUBLIC void init_8259A()
     out_byte(INT_S_CTLMASK, 0x1);
 
     // MASTER OCW1
-    out_byte(INT_M_CTLMASK,	0xFF);
+    out_byte(INT_M_CTLMASK,	0xFE); // 打开时间中断
 
     // SLAVE OCW1
     out_byte(INT_S_CTLMASK,	0xFF);

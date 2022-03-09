@@ -18,7 +18,7 @@ EXTERN DESCRIPTOR	gdt[GDT_SIZE];
 EXTERN u8 idt_ptr[6];
 EXTERN	GATE		idt[IDT_SIZE];
 
-
+EXTERN int k_reenter;
 EXTERN TSS tss;
 EXTERN PROCESS* p_proc_ready;
 

@@ -17,10 +17,12 @@ PUBLIC int kernel_main()
     p_proc->regs.es = (8 & SA_RPL_MASK & SA_TI_MASK) | SA_TIL | SA_RPL1;
     p_proc->regs.fs = (8 & SA_RPL_MASK & SA_TI_MASK) | SA_TIL | SA_RPL1;
     p_proc->regs.ss = (8 & SA_RPL_MASK & SA_TI_MASK) | SA_TIL | SA_RPL1;
-    p_proc->regs.gs = (SELECTOR_KERNEL_GS & SA_RPL_MASK) | SA_RPL1;
+    p_proc->regs.gs = (SELECTOR_KERNEL_GS & SA_RPL_MASK) | SA_RPL1; // 仅改变 RPL
     p_proc->regs.eip = (u32)TestA;
     p_proc->regs.esp = (u32)task_stack + STACK_SIZE_TOTAL;
     p_proc->regs.eflags = 0x1202;
+
+    k_reenter = -1;
 
     p_proc_ready	= proc_table;
 	restart();

@@ -5,12 +5,14 @@ extern cstart
 extern exception_handler
 extern spurious_irq
 extern kernel_main
+extern disp_str
 
 extern gdt_ptr
 extern idt_ptr
 extern	p_proc_ready
 extern	tss
 extern disp_pos
+extern	k_reenter
 
 BITS 32 ; 对齐
 
@@ -20,7 +22,7 @@ StackSpace    resb  2 * 1024
 StackTop:
 
 [SECTION .data]
-message db "Test\n", 0
+clock_init_msg db "^", 0
 
 [SECTION .text]
 
@@ -106,7 +108,49 @@ csinit:
 ALIGN 16 
 hwint00:
     ; hwint_master 0
-    iretd
+    sub esp, 4
+    ; 保存当前寄存器的值
+    pushad
+    push ds
+    push es
+    push fs
+    push gs
+
+    mov dx, ss
+    mov ds, dx
+    mov es, dx
+
+    inc dword[k_reenter]
+    cmp dword[k_reenter], 0
+    jne .re_enter
+
+    mov esp, StackTop ; 内核栈顶，若栈内存储东西是否有问题？
+    inc byte[gs:0]
+
+    mov al, EOI
+    out INT_M_CTL, al ; 中断结束
+
+    push clock_init_msg
+    call disp_str
+    add esp, 4
+
+    mov esp, [p_proc_ready]
+
+    lea eax, [esp + P_STACKTOP] ; 取esp
+    mov dword [tss + TSS3_S_SP0], eax ; 保存esp0
+
+.re_enter:
+
+    dec dword[k_reenter]
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popad
+
+    add esp, 4
+    
+    iretd ; 回到进程
 
 ALIGN 16 
 hwint01:
@@ -259,7 +303,7 @@ restart:
     mov esp, [p_proc_ready]
     lldt [esp + P_LDT_SEL]
     lea eax, [esp + P_STACKTOP]
-    mov	dword [tss + TSS3_S_SP0], eax
+    mov	dword [tss + TSS3_S_SP0], eax ; 保存当前esp0
 
 	pop	gs
 	pop	fs
