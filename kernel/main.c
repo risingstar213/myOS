@@ -32,9 +32,13 @@ PUBLIC int kernel_main()
         select_ldt += 1 << 3;
         p_task_stack -= p_task[i].stack_size;
     }
-    k_reenter = -1;
+    k_reenter = 0;
 
     p_proc_ready	= proc_table;
+
+    put_irq_handler(CLOCK_IRQ, clock_handler);
+    enable_irq(CLOCK_IRQ); 
+
 	restart();
 
     while(1) {}
@@ -57,6 +61,17 @@ void TestB()
     int i = 0x1000;
     while(1) {
         disp_str("B");
+        disp_int(i++);
+        disp_str(".");
+        delay(50);
+    }
+}
+
+void TestC()
+{
+    int i = 0x2000;
+    while(1) {
+        disp_str("C");
         disp_int(i++);
         disp_str(".");
         delay(50);

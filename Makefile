@@ -75,7 +75,7 @@ lib/klib.o : lib/klib.c
 	$(CC) $(CINC) -fno-stack-protector -m32 -c -fno-builtin -o $@ $<
 
 lib/kliba.o : lib/kliba.asm
-	$(ASM) -f elf -o $@ $<
+	$(ASM) -I include/ -f elf -o $@ $<
 
 lib/string.o : lib/string.asm
 	$(ASM) -f elf -o $@ $<

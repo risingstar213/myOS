@@ -14,5 +14,13 @@ PUBLIC void	delay(int time);
 void restart();
 void TestA();
 void TestB();
+void TestC();
 
+PUBLIC void put_irq_handler(int irq, irq_handler handler);
+PUBLIC void spurious_irq(int irq);
+
+PUBLIC void clock_handler(int irq);
+
+PUBLIC int disable_irq(int irq);
+PUBLIC void	enable_irq(int irq);
 #endif

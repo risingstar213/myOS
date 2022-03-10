@@ -28,3 +28,5 @@ extern PROCESS proc_table[];
 extern char task_stack[];
 // Task table
 extern TASK task_table[];
+
+extern irq_handler irq_table[];

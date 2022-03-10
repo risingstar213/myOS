@@ -1,3 +1,6 @@
+
+%include "sconst.inc"
+
 extern disp_pos
 
 [SECTION .text]
@@ -6,6 +9,8 @@ global disp_str
 global disp_color_str
 global out_byte
 global in_byte
+global disable_irq
+global enable_irq
 
 
 disp_str:
@@ -108,4 +113,57 @@ in_byte:
 	in al, dx
 	nop
 	nop
+	ret
+
+
+enable_irq:
+	mov ecx, [esp + 4]
+	pushf
+	cli
+	mov ah, ~1
+	rol ah, cl 
+	cmp cl, 8
+	jae enable_8
+enable_0:
+	in al, INT_M_CTLMASK
+	and al, ah
+	out INT_M_CTLMASK, al
+	popf
+	ret
+enable_8:
+	in al, INT_S_CTLMASK
+	and al, ah
+	out INT_S_CTLMASK, al
+	popf
+	ret
+
+disable_irq:
+	mov ecx, [esp + 4]
+	pushf
+	cli
+	mov ah, 1
+	rol ah, cl 
+	cmp cl, 8
+	jae disable_8
+disable_0:
+	in al, INT_M_CTLMASK
+	test al, ah
+	jnz dis_already 
+	or al, ah
+	out INT_M_CTLMASK, al
+	popf
+	mov eax, 1 ; return 1
+	ret
+disable_8:
+	in al, INT_S_CTLMASK
+	test al, ah
+	jnz dis_already 
+	or al, ah
+	out INT_S_CTLMASK, al
+	popf
+	mov eax, 1 ; return 1
+	ret
+dis_already:
+	popf
+	xor eax, eax ; return 0
 	ret
