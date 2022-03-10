@@ -2,6 +2,7 @@
 
 global memcpy
 global memset
+global strcpy
 
 memcpy:
     push	ebp
@@ -65,3 +66,33 @@ memset:
 	pop ebp
 
 	ret
+
+; function strcpy
+strcpy:
+	push ebp
+	mov ebp, esp
+
+	push eax
+	push esi
+	push edi
+
+	mov esi, [ebp + 8]
+	mov edi, [ebp + 12]
+
+.strcpy1:
+	mov al, byte [esi]
+	mov byte[edi], al
+	inc esi
+	inc edi
+	cmp al, 0
+	jnz .strcpy1
+
+	pop edi
+	pop esi
+	pop eax
+
+	mov esp, ebp
+	pop ebp
+
+	ret
+; end of function

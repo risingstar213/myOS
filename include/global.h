@@ -26,3 +26,5 @@ EXTERN PROCESS* p_proc_ready;
 extern PROCESS proc_table[];
 // Task stack
 extern char task_stack[];
+// Task table
+extern TASK task_table[];

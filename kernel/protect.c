@@ -178,11 +178,18 @@ PUBLIC void init_prot() // init protection mode
 			DA_386TSS);
 	tss.iobase = sizeof(tss); /* 没有I/O许可位图 */
 
-    // 进程A局部描述符表
-    init_descriptor(&gdt[SELECTOR_LDT_FIRST >> 3], 
-            vir2phys(seg2phys(SELECTOR_KERNEL_DS), proc_table[0].ldts),
+    // 进程局部描述符表
+    int i;
+    PROCESS* p_proc = proc_table;
+    u16 selector_ldt = SELECTOR_LDT_FIRST;
+    for(i = 0; i < NR_TASKS; i++) {
+        init_descriptor(&gdt[selector_ldt >> 3], 
+            vir2phys(seg2phys(SELECTOR_KERNEL_DS), p_proc[i].ldts),
             LDT_SIZE * sizeof(DESCRIPTOR) - 1,
             DA_LDT);
+        
+        selector_ldt += 1 << 3;
+    }
 }
 
 

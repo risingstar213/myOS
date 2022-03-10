@@ -29,18 +29,29 @@ typedef struct s_stackframe {
     u32 ss;
 } STACK_FRAME;
 
+
+// 进程表
 typedef struct s_proc {
     STACK_FRAME regs;
     u16 ldt_sel;  // ldt selector
-    DESCRIPTOR ldts[LDT_SIZE];
-    u32 pid;
-    char p_name[16];
+    DESCRIPTOR ldts[LDT_SIZE]; // ldt数组
+    u32 pid; // pid
+    char p_name[16]; // name
 } PROCESS;
 
-#define NR_TASKS 1
+// tasktab
+typedef struct s_task {
+    task_f initial_eip;
+    int stack_size;
+    char name[32];
+} TASK;
+
+
+#define NR_TASKS 2
 
 
 #define STACK_SIZE_TESTA	0x8000
+#define STACK_SIZE_TESTB    0x8000
 
-#define STACK_SIZE_TOTAL STACK_SIZE_TESTA
+#define STACK_SIZE_TOTAL (STACK_SIZE_TESTA + STACK_SIZE_TESTB)
 #endif /* _PROC_H_ */

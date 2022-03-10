@@ -82,6 +82,7 @@ typedef struct s_tss {
 #define SA_RPL1 1
 #define SA_RPL2 2
 #define SA_RPL3 3
+#define RPL_TASK SA_RPL1
 
 #define SA_TI_MASK 0xFFFB // 1011B
 #define SA_TIG 0x0000

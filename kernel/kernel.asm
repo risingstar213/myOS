@@ -6,6 +6,8 @@ extern exception_handler
 extern spurious_irq
 extern kernel_main
 extern disp_str
+extern delay
+extern clock_handler
 
 extern gdt_ptr
 extern idt_ptr
@@ -120,22 +122,32 @@ hwint00:
     mov ds, dx
     mov es, dx
 
-    inc dword[k_reenter]
-    cmp dword[k_reenter], 0
-    jne .re_enter
-
-    mov esp, StackTop ; 内核栈顶，若栈内存储东西是否有问题？
     inc byte[gs:0]
 
     mov al, EOI
     out INT_M_CTL, al ; 中断结束
 
-    push clock_init_msg
-    call disp_str
+    inc dword[k_reenter]
+    cmp dword[k_reenter], 0
+    jne .re_enter
+    
+    mov esp, StackTop ; 内核栈顶，若栈内存储东西是否有问题？
+
+    sti
+
+
+    push 0
+    call clock_handler
     add esp, 4
 
-    mov esp, [p_proc_ready]
+    ; push 10
+    ; call delay
+    ; add esp, 4
 
+    cli
+
+    mov esp, [p_proc_ready]
+    lldt [esp + P_LDT_SEL]
     lea eax, [esp + P_STACKTOP] ; 取esp
     mov dword [tss + TSS3_S_SP0], eax ; 保存esp0
 

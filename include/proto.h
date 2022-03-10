@@ -12,5 +12,7 @@ PUBLIC void	init_8259A();
 PUBLIC void	delay(int time);
 
 void restart();
+void TestA();
+void TestB();
 
 #endif
