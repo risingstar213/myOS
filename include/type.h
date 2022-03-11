@@ -8,4 +8,5 @@ typedef unsigned char u8;
 typedef void (*int_handler) ();
 typedef void (*task_f)();
 typedef void (*irq_handler) (int irq);
+typedef void *system_call; // 任意类型的函数
 #endif /* _TYPE_H_ */

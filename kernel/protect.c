@@ -36,6 +36,8 @@ void hwint13();
 void hwint14();
 void hwint15();
 
+void sys_call();
+
 PUBLIC u32 seg2phys(u16 seg) // seg 选择符
 {
     DESCRIPTOR* p_dest = &gdt[seg >> 3];
@@ -68,7 +70,7 @@ PRIVATE void init_descriptor(DESCRIPTOR *p_desc, u32 base, u32 limit, u16 attr)
 PUBLIC void init_prot() // init protection mode
 {
     init_8259A();
-    
+
     // 默认中断
 
     init_idt_desc(INT_VECTOR_DIVIDE, DA_386IGate,
@@ -89,10 +91,10 @@ PUBLIC void init_prot() // init protection mode
     init_idt_desc(INT_VECTOR_BOUNDS,	DA_386IGate,
 		      bounds_check,		PRIVILEGE_KRNL);
 
-	init_idt_desc(INT_VECTOR_INVAL_OP,	DA_386IGate,
+    init_idt_desc(INT_VECTOR_INVAL_OP,	DA_386IGate,
 		      inval_opcode,		PRIVILEGE_KRNL);
 
-	init_idt_desc(INT_VECTOR_COPROC_NOT,	DA_386IGate,
+    init_idt_desc(INT_VECTOR_COPROC_NOT,	DA_386IGate,
 		      copr_not_available,	PRIVILEGE_KRNL);
 
 	init_idt_desc(INT_VECTOR_DOUBLE_FAULT,	DA_386IGate,
@@ -169,6 +171,9 @@ PUBLIC void init_prot() // init protection mode
     init_idt_desc(INT_VECTOR_IRQ8 + 7, DA_386IGate,
             hwint15, PRIVILEGE_KRNL);
     
+    init_idt_desc(INT_VECTOR_SYS_CALL, DA_386IGate,
+            sys_call, PRIVILEGE_USER);
+
     // TSS
     memset(&tss, 0, sizeof(tss));
     tss.ss0 = SELECTOR_KERNEL_DS;

@@ -5,6 +5,10 @@ void TestA();
 PUBLIC int kernel_main()
 {
     disp_str("-----\"kernel_main\" begins-----\n");
+    ticks = 0;
+    out_byte(TIMER_MODE, RATE_GENERATOR);
+    out_byte(TIMER0, (u8)(TIMER_FREQ/HZ));
+    out_byte(TIMER0, (u8)((TIMER_FREQ/HZ) >> 8));
 
     TASK* p_task = task_table;
     PROCESS* p_proc = proc_table;
@@ -49,10 +53,11 @@ void TestA()
 {
     int i = 0;
     while(1) {
+        get_ticks();
         disp_str("A");
-        disp_int(i++);
+        disp_int(get_ticks());
         disp_str(".");
-        delay(50);
+        milli_delay(1000);
     }
 }
 
@@ -63,7 +68,7 @@ void TestB()
         disp_str("B");
         disp_int(i++);
         disp_str(".");
-        delay(50);
+        milli_delay(1000);
     }
 }
 
@@ -74,6 +79,6 @@ void TestC()
         disp_str("C");
         disp_int(i++);
         disp_str(".");
-        delay(50);
+        milli_delay(1000);
     }
 }

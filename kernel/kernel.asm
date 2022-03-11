@@ -8,6 +8,7 @@ extern kernel_main
 extern disp_str
 extern delay
 extern irq_table
+extern sys_call_table
 
 extern gdt_ptr
 extern idt_ptr
@@ -68,6 +69,8 @@ global hwint12
 global hwint13
 global hwint14
 global hwint15
+
+global sys_call
 
 
 
@@ -290,7 +293,7 @@ save:
     mov ds, dx
     mov es, dx
 
-    mov eax, esp
+    mov esi, esp
     
     inc dword[k_reenter]
     cmp dword[k_reenter], 0
@@ -299,10 +302,10 @@ save:
     mov esp, StackTop ; 内核栈顶，若栈内存储东西是否有问题？
 
     push restart
-    jmp [eax + RETADR - P_STACKBASE]
+    jmp [esi + RETADR - P_STACKBASE]
 .1:
     push restart_reenter
-    jmp [eax + RETADR - P_STACKBASE]
+    jmp [esi + RETADR - P_STACKBASE]
     
 
 restart:
@@ -321,3 +324,15 @@ restart_reenter:
 	add	esp, 4
 
 	iretd
+
+sys_call:
+    call save
+    sti
+
+    call [sys_call_table + 4 * eax]
+    mov [esi + EAXREG - P_STACKBASE], eax ; 保存 eax 在进程表中
+    ; 系统调用结果
+
+    cli
+
+    ret

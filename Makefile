@@ -15,7 +15,7 @@ BOOT := boot/boot.bin boot/loader.bin
 BOOTINC := -I boot/include/
 KERNEL := kernel/kernel.bin
 CINC := -I include/
-OBJS := kernel/global.o kernel/kernel.o kernel/main.o kernel/start.o kernel/i8259.o kernel/protect.o kernel/clock.o lib/klib.o lib/kliba.o lib/string.o
+OBJS := kernel/global.o kernel/kernel.o kernel/main.o kernel/start.o kernel/i8259.o kernel/protect.o kernel/clock.o kernel/syscall.o kernel/proc.o lib/klib.o lib/kliba.o lib/string.o
 DASMOUTPUT	= kernel.bin.asm
 
 .PHONY : all everything clean boot kernel disasm
@@ -69,6 +69,12 @@ kernel/protect.o : kernel/protect.c
 	$(CC) $(CINC) -fno-stack-protector -m32 -c -fno-builtin -o $@ $<
 
 kernel/clock.o : kernel/clock.c
+	$(CC) $(CINC)  -m32 -c -fno-builtin -o $@ $<
+
+kernel/syscall.o : kernel/syscall.asm
+	$(ASM) -I include/ -f elf -o $@ $<
+
+kernel/proc.o : kernel/proc.c
 	$(CC) $(CINC)  -m32 -c -fno-builtin -o $@ $<
 
 lib/klib.o : lib/klib.c

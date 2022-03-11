@@ -55,4 +55,7 @@ typedef struct s_task {
 #define STACK_SIZE_TESTC    0x8000
 
 #define STACK_SIZE_TOTAL (STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC)
+
+
+#define NR_SYS_CALL 1
 #endif /* _PROC_H_ */

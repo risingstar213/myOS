@@ -16,6 +16,7 @@ PUBLIC char *itoa(char *str, int num)
     if(len == 2) {
         str[2] = '0';
         str[3] = '\0';
+        return str;
     }
 
     i = 2; j = len - 1;
@@ -27,6 +28,7 @@ PUBLIC char *itoa(char *str, int num)
         i++; j--;
     }
     str[len] = '\0';
+    return str;
 }
 
 PUBLIC void disp_int(int input)

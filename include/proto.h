@@ -23,4 +23,10 @@ PUBLIC void clock_handler(int irq);
 
 PUBLIC int disable_irq(int irq);
 PUBLIC void	enable_irq(int irq);
+
+PUBLIC int sys_get_ticks();
+PUBLIC void sys_call();
+PUBLIC int get_ticks();
+
+PUBLIC void milli_delay(int milli_sec);
 #endif

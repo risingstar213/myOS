@@ -21,6 +21,7 @@ EXTERN	GATE		idt[IDT_SIZE];
 EXTERN int k_reenter;
 EXTERN TSS tss;
 EXTERN PROCESS* p_proc_ready;
+EXTERN int ticks;
 
 // Process table
 extern PROCESS proc_table[];

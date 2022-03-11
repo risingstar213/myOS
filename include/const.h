@@ -32,4 +32,11 @@
 #define	FLOPPY_IRQ	6	/* floppy disk */
 #define	PRINTER_IRQ	7
 #define	AT_WINI_IRQ	14	/* at winchester */
+
+#define TIMER0     0x40
+#define TIMER_MODE 0x43
+#define RATE_GENERATOR 0x34
+
+#define TIMER_FREQ 1193182L
+#define HZ 100
 #endif /* _CONST_H_*/
