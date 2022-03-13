@@ -35,6 +35,10 @@ typedef struct s_proc {
     STACK_FRAME regs;
     u16 ldt_sel;  // ldt selector
     DESCRIPTOR ldts[LDT_SIZE]; // ldt数组
+
+    int ticks;
+    int priority;
+
     u32 pid; // pid
     char p_name[16]; // name
 } PROCESS;
@@ -47,14 +51,18 @@ typedef struct s_task {
 } TASK;
 
 
-#define NR_TASKS 3
+#define NR_TASKS 4
 
 
+#define STACK_SIZE_TTY		0x8000
 #define STACK_SIZE_TESTA	0x8000
 #define STACK_SIZE_TESTB    0x8000
 #define STACK_SIZE_TESTC    0x8000
 
-#define STACK_SIZE_TOTAL (STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC)
+#define STACK_SIZE_TOTAL (STACK_SIZE_TTY + \
+                            STACK_SIZE_TESTA + \
+                            STACK_SIZE_TESTB + \
+                            STACK_SIZE_TESTC)
 
 
 #define NR_SYS_CALL 1

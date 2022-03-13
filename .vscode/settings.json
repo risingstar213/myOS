@@ -2,6 +2,8 @@
     "files.associations": {
         "global.h": "c",
         "type.h": "c",
-        "const.h": "c"
+        "const.h": "c",
+        "proto.h": "c",
+        "string.h": "c"
     }
 }

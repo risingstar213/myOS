@@ -20,13 +20,25 @@ PUBLIC void put_irq_handler(int irq, irq_handler handler);
 PUBLIC void spurious_irq(int irq);
 
 PUBLIC void clock_handler(int irq);
+PUBLIC void init_clock();
+
+PUBLIC void keyboard_handler(int irq);
+PUBLIC void keyboard_read();
+PUBLIC void init_keyboard();
+
 
 PUBLIC int disable_irq(int irq);
 PUBLIC void	enable_irq(int irq);
+PUBLIC void disable_int();
+PUBLIC void enable_int();
 
 PUBLIC int sys_get_ticks();
 PUBLIC void sys_call();
 PUBLIC int get_ticks();
 
 PUBLIC void milli_delay(int milli_sec);
+
+PUBLIC void schedule();
+
+PUBLIC void task_tty();
 #endif

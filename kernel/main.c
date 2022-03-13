@@ -6,9 +6,6 @@ PUBLIC int kernel_main()
 {
     disp_str("-----\"kernel_main\" begins-----\n");
     ticks = 0;
-    out_byte(TIMER_MODE, RATE_GENERATOR);
-    out_byte(TIMER0, (u8)(TIMER_FREQ/HZ));
-    out_byte(TIMER0, (u8)((TIMER_FREQ/HZ) >> 8));
 
     TASK* p_task = task_table;
     PROCESS* p_proc = proc_table;
@@ -36,12 +33,18 @@ PUBLIC int kernel_main()
         select_ldt += 1 << 3;
         p_task_stack -= p_task[i].stack_size;
     }
+    // temp priority
+    proc_table[0].ticks = proc_table[0].priority = 150;
+    proc_table[1].ticks = proc_table[1].priority = 50;
+    proc_table[2].ticks = proc_table[2].priority = 30;
+    // To be modified
+
     k_reenter = 0;
 
     p_proc_ready	= proc_table;
 
-    put_irq_handler(CLOCK_IRQ, clock_handler);
-    enable_irq(CLOCK_IRQ); 
+    init_clock();
+    init_keyboard();
 
 	restart();
 
@@ -54,10 +57,10 @@ void TestA()
     int i = 0;
     while(1) {
         get_ticks();
-        disp_str("A");
-        disp_int(get_ticks());
-        disp_str(".");
-        milli_delay(1000);
+        // disp_str("A");
+        // disp_int(get_ticks());
+        // disp_str(".");
+        milli_delay(100);
     }
 }
 
@@ -65,10 +68,10 @@ void TestB()
 {
     int i = 0x1000;
     while(1) {
-        disp_str("B");
-        disp_int(i++);
-        disp_str(".");
-        milli_delay(1000);
+        // disp_str("B");
+        // disp_int(i++);
+        // disp_str(".");
+        milli_delay(100);
     }
 }
 
@@ -76,9 +79,9 @@ void TestC()
 {
     int i = 0x2000;
     while(1) {
-        disp_str("C");
-        disp_int(i++);
-        disp_str(".");
-        milli_delay(1000);
+        // disp_str("C");
+        // disp_int(i++);
+        // disp_str(".");
+        milli_delay(100);
     }
 }
